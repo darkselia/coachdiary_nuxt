@@ -42,8 +42,16 @@ onMounted(() => {
   <v-app-bar :class="{ 'app-bar': !smAndUp }">
     <v-app-bar-title>
       <nuxt-link v-if="smAndUp" :to="logoLink" class="title">
-        <img v-if="width < 820" alt="logo" class="icon" src="/mobile_man_run_blue.svg" />
-        <img v-else alt="logo" class="icon" src="/mobile_logo_blue.svg" />
+        <img
+          v-if="width < 820"
+          alt="logo"
+          class="icon"
+          src="/mobile_man_run_blue.svg" />
+        <img
+          v-else
+          alt="logo"
+          class="icon"
+          src="/mobile_logo_blue.svg" />
       </nuxt-link>
       <div v-else class="text-center mr-4 mobile-title">{{ mobileTitle }}</div>
     </v-app-bar-title>
@@ -61,39 +69,43 @@ onMounted(() => {
             <v-btn :to="{ name: 'about-us' }" variant="text">О нас</v-btn>
           </template>
 
-          <v-btn v-if="!isLoginPage" :to="{ name: 'login' }" rounded variant="flat">Войти</v-btn>
+          <v-btn
+            v-if="!isLoginPage"
+            :to="{ name: 'login' }"
+            rounded
+            variant="flat">Войти</v-btn>
         </template>
 
         <template v-else-if="smAndUp">
           <v-btn
-              v-if="userStore.isTeacher"
-              :to="{ name: 'my-classes' }"
-              variant="text"
-              text="Мои классы"
+            v-if="userStore.isTeacher"
+            :to="{ name: 'my-classes' }"
+            variant="text"
+            text="Мои классы"
           />
           <v-btn
-              v-if="userStore.isTeacher"
-              :to="{ name: 'my-diary' }"
-              variant="text"
-              text="Дневник"
+            v-if="userStore.isTeacher"
+            :to="{ name: 'my-diary' }"
+            variant="text"
+            text="Дневник"
           />
           <v-btn
-              v-if="userStore.isTeacher"
-              :to="{ name: 'my-standards' }"
-              variant="text"
-              text="Мои нормативы"
+            v-if="userStore.isTeacher"
+            :to="{ name: 'my-standards' }"
+            variant="text"
+            text="Мои нормативы"
           />
           <v-divider
-              v-if="userStore.isTeacher"
-              class="divider mb-2 mt-2"
-              color="rgb(var(--v-theme-primary-darken-1))"
-              vertical
+            v-if="userStore.isTeacher"
+            class="divider mb-2 mt-2"
+            color="rgb(var(--v-theme-primary-darken-1))"
+            vertical
           />
           <v-btn
-              v-if="userStore.isStudent"
-              :to="{ name: 'student', params: { id: userStore.studentId } }"
-              variant="text"
-              text="Мои результаты"
+            v-if="userStore.isStudent"
+            :to="{ name: 'student', params: { id: userStore.studentId } }"
+            variant="text"
+            text="Мои результаты"
           />
           <v-btn :to="{ name: 'profile' }" variant="text" text="Профиль" />
           <v-btn rounded variant="flat" @click="userStore.logout">Выйти</v-btn>

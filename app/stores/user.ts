@@ -53,9 +53,7 @@ export const useUserStore = defineStore('user', () => {
           await router.push({ name: 'home' });
         }
       }
-    } catch {
-      // намеренно оставлено пустым
-    }
+    } catch { /* намеренно оставлено пустым */ }
   }
 
   return {

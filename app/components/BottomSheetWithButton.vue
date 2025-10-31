@@ -19,10 +19,10 @@ function toggle() {
 <template>
   <v-btn
     v-if="icon"
-    class="button"
-    variant="outlined"
     :icon="icon"
     :color="buttonColor"
+    class="button"
+    variant="outlined"
     @click="toggle"
   />
   <v-btn

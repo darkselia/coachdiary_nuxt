@@ -9,10 +9,10 @@ defineProps<{
   <div :class="{ mirrored }" class="container">
     <div class="img-border rounded-xl">
       <v-img
-:src
-alt=""
-class="img rounded-xl"
-cover />
+        :src
+        alt=""
+        class="img rounded-xl"
+        cover />
     </div>
     <p class="text">
       <slot />

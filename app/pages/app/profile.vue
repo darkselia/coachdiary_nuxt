@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-definePageMeta({name: 'profile', mobileTitle: 'Профиль'});
+definePageMeta({ name: 'profile', mobileTitle: 'Профиль' });
 
 const { smAndUp } = useDisplay();
 const userStore = useUserStore();
@@ -32,52 +32,62 @@ const exportIncludesStandards = ref(false);
 
 const isSetNameButtonDisabled = computed(() => {
   return (
-      isLoading.value ||
-      (firstName.value?.trim() === currentFirstName.value &&
-          lastName.value?.trim() === currentLastName.value &&
-          patronymic.value?.trim() === currentPatronymic.value) ||
-      firstName.value?.trim().length === 0 ||
-      !firstName.value ||
-      lastName.value?.trim().length === 0 ||
-      !lastName.value
+    isLoading.value ||
+    (firstName.value?.trim() === currentFirstName.value &&
+        lastName.value?.trim() === currentLastName.value &&
+        patronymic.value?.trim() === currentPatronymic.value) ||
+        firstName.value?.trim().length === 0 ||
+        !firstName.value ||
+        lastName.value?.trim().length === 0 ||
+        !lastName.value
   );
 });
 
 const isSetEmailButtonDisabled = computed(() => {
   return (
-      isLoading.value ||
-      email.value?.trim() === currentEmail.value ||
-      email.value?.trim().length === 0
+    isLoading.value ||
+    email.value?.trim() === currentEmail.value ||
+    email.value?.trim().length === 0
   );
 });
 
 const isSetPasswordButtonDisabled = computed(() => {
   return !(
-      isLoading.value ||
-      (password.value?.trim().length &&
-          newPassword.value?.trim().length &&
-          newPassword.value?.trim() === passwordConfirmation.value?.trim())
+    isLoading.value ||
+    (password.value?.trim().length &&
+        newPassword.value?.trim().length &&
+        newPassword.value?.trim() === passwordConfirmation.value?.trim())
   );
 });
 
 const isSetExportButtonDisabled = computed(() => {
   return (
-      isLoading.value ||
-      (!exportIncludesNorms.value && !exportIncludesResults.value && !exportIncludesStandards.value)
+    isLoading.value ||
+    (!exportIncludesNorms.value && !exportIncludesResults.value && !exportIncludesStandards.value)
   );
 });
 
 const navigationItems = computed(() => {
   if (userStore.isTeacher) {
     return [
-      { title: 'Личные данные', value: 'personal-info', icon: 'mdi-account' },
-      { title: 'Безопасность', value: 'security', icon: 'mdi-lock' },
-      { title: 'Данные и отчеты', value: 'data-reports', icon: 'mdi-database' },
+      {
+        title: 'Личные данные', value: 'personal-info', icon: 'mdi-account',
+      },
+      {
+        title: 'Безопасность', value: 'security', icon: 'mdi-lock',
+      },
+      {
+        title: 'Данные и отчеты', value: 'data-reports', icon: 'mdi-database',
+      },
     ];
   }
   return [
-    { title: 'Личные данные', value: 'personal-info', icon: 'mdi-account' },
-    { title: 'Безопасность', value: 'security', icon: 'mdi-lock' },
+    {
+      title: 'Личные данные', value: 'personal-info', icon: 'mdi-account',
+    },
+    {
+      title: 'Безопасность', value: 'security', icon: 'mdi-lock',
+    },
   ];
 });
 
@@ -133,13 +143,11 @@ async function patchEmail() {
   if (isSetEmailButtonDisabled.value) {
     return;
   } else if (
-      (userId.value === 1 || userId.value === 2) &&
-      userStore.isTeacher &&
-      import.meta.env.VITE_DEBUG !== 'TRUE'
+    (userId.value === 1 || userId.value === 2) &&
+    userStore.isTeacher &&
+    import.meta.env.VITE_DEBUG !== 'TRUE'
   ) {
-    toast.error(
-        'Это тестовый аккаунт, для проверки работоспособности приложения, на нем нельзя менять почту',
-    );
+    toast.error('Это тестовый аккаунт, для проверки работоспособности приложения, на нем нельзя менять почту');
     return;
   }
 
@@ -165,13 +173,11 @@ async function putPassword() {
   if (isSetPasswordButtonDisabled.value) {
     return;
   } else if (
-      (userId.value === 1 || userId.value === 2) &&
-      userStore.isTeacher &&
-      import.meta.env.VITE_DEBUG !== 'TRUE'
+    (userId.value === 1 || userId.value === 2) &&
+    userStore.isTeacher &&
+    import.meta.env.VITE_DEBUG !== 'TRUE'
   ) {
-    toast.error(
-        'Это тестовый аккаунт, для проверки работоспособности приложения, на нем нельзя менять пароль',
-    );
+    toast.error('Это тестовый аккаунт, для проверки работоспособности приложения, на нем нельзя менять пароль');
     return;
   }
 
@@ -239,7 +245,7 @@ async function exportData(type: 'xlsx' | 'json') {
     } else {
       toast.error(getErrorMessage(await response.json()));
     }
-  } catch (e) {
+  } catch {
     toast.error('Произошла ошибка во время экспорта данных, попробуйте еще раз');
   }
 }
@@ -248,7 +254,7 @@ async function importDataJSON() {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = '.json';
-  fileInput.onchange = async (event: Event) => {
+  fileInput.onchange = async(event: Event) => {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
@@ -263,7 +269,7 @@ async function importDataJSON() {
         } else {
           toast.error(getErrorMessage(data));
         }
-      } catch (error) {
+      } catch {
         toast.error('Произошла ошибка во время импорта данных, попробуйте еще раз');
       } finally {
         isImporting.value = false;
@@ -286,7 +292,7 @@ async function resendVerificationEmail() {
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   await getData();
 });
 </script>
@@ -294,8 +300,8 @@ onMounted(async () => {
 <template>
   <div v-if="smAndUp" class="menu">
     <v-btn
-        :variant="pageType === 'personal-info' ? 'tonal' : 'text'"
-        @click="pageType = 'personal-info'"
+      :variant="pageType === 'personal-info' ? 'tonal' : 'text'"
+      @click="pageType = 'personal-info'"
     >
       <v-icon class="mr-2">mdi-account</v-icon>
       Личные данные
@@ -305,8 +311,8 @@ onMounted(async () => {
       Безопасность
     </v-btn>
     <v-btn
-        :variant="pageType === 'data-reports' ? 'tonal' : 'text'"
-        @click="pageType = 'data-reports'"
+      :variant="pageType === 'data-reports' ? 'tonal' : 'text'"
+      @click="pageType = 'data-reports'"
     >
       <v-icon class="mr-2">mdi-database</v-icon>
       Данные и отчеты
@@ -320,14 +326,14 @@ onMounted(async () => {
 
   <div v-else class="mobile-menu">
     <v-select
-        v-model="pageType"
-        :items="navigationItems"
-        item-title="title"
-        item-value="value"
-        variant="outlined"
-        density="default"
-        hide-details
-        color="primary"
+      v-model="pageType"
+      :items="navigationItems"
+      item-title="title"
+      item-value="value"
+      variant="outlined"
+      density="default"
+      hide-details
+      color="primary"
     >
       <template #selection="{ item }">
         <v-icon class="mr-2">{{ item?.raw?.icon }}</v-icon>
@@ -350,66 +356,66 @@ onMounted(async () => {
         <form class="text-field mb-4" @submit.prevent="patchName">
           <div class="text-field-fio">
             <v-text-field
-                v-model="firstName"
-                :readonly="userStore.isStudent"
-                :disabled="isLoading"
-                :clearable="!userStore.isStudent"
-                persistent-clear
-                label="Имя"
+              v-model="firstName"
+              :readonly="userStore.isStudent"
+              :disabled="isLoading"
+              :clearable="!userStore.isStudent"
+              persistent-clear
+              label="Имя"
             />
             <v-text-field
-                v-model="lastName"
-                :disabled="isLoading"
-                :readonly="userStore.isStudent"
-                :clearable="!userStore.isStudent"
-                persistent-clear
-                label="Фамилия"
+              v-model="lastName"
+              :disabled="isLoading"
+              :readonly="userStore.isStudent"
+              :clearable="!userStore.isStudent"
+              persistent-clear
+              label="Фамилия"
             />
             <v-text-field
-                v-model="patronymic"
-                :disabled="isLoading"
-                :readonly="userStore.isStudent"
-                :clearable="!userStore.isStudent"
-                persistent-clear
-                label="Отчество"
+              v-model="patronymic"
+              :disabled="isLoading"
+              :readonly="userStore.isStudent"
+              :clearable="!userStore.isStudent"
+              persistent-clear
+              label="Отчество"
             />
           </div>
           <v-btn
-              v-if="!userStore.isStudent"
-              :disabled="isSetNameButtonDisabled"
-              class="button"
-              rounded
-              text="Изменить"
-              type="submit"
+            v-if="!userStore.isStudent"
+            :disabled="isSetNameButtonDisabled"
+            class="button"
+            rounded
+            text="Изменить"
+            type="submit"
           />
         </form>
         <form class="text-field" @submit.prevent="patchEmail">
           <v-text-field
-              v-model="email"
-              :disabled="isLoading"
-              clearable
-              persistent-clear
-              label="Почта"
-              type="email"
+            v-model="email"
+            :disabled="isLoading"
+            clearable
+            persistent-clear
+            label="Почта"
+            type="email"
           />
           <div class="text-field-email">
             <div v-if="!isEmailVerified" class="verify-email-block">
               <span class="verify-email-text red">Почта не подтверждена</span>
               <v-btn
-                  variant="text"
-                  size="small"
-                  text="Отправить письмо повторно"
-                  class="button-email"
-                  @click="resendVerificationEmail"
+                variant="text"
+                size="small"
+                text="Отправить письмо повторно"
+                class="button-email"
+                @click="resendVerificationEmail"
               />
             </div>
             <span v-else class="verify-email-text green">Почта подтверждена</span>
             <v-btn
-                :disabled="isSetEmailButtonDisabled"
-                class="button"
-                rounded
-                text="Изменить"
-                type="submit"
+              :disabled="isSetEmailButtonDisabled"
+              class="button"
+              rounded
+              text="Изменить"
+              type="submit"
             />
           </div>
         </form>
@@ -426,47 +432,47 @@ onMounted(async () => {
         </div>
         <form class="text-field" @submit.prevent="putPassword">
           <v-text-field
-              v-model="password"
-              :disabled="isLoading"
-              :append-inner-icon="password ? 'mdi-eye' : undefined"
-              :type="passwordType"
-              clearable
-              label="Старый пароль"
-              persistent-clear
-              @click:append-inner="passwordType = passwordType === 'password' ? 'text' : 'password'"
+            v-model="password"
+            :disabled="isLoading"
+            :append-inner-icon="password ? 'mdi-eye' : undefined"
+            :type="passwordType"
+            clearable
+            label="Старый пароль"
+            persistent-clear
+            @click:append-inner="passwordType = passwordType === 'password' ? 'text' : 'password'"
           />
 
           <v-text-field
-              v-model="newPassword"
-              :disabled="isLoading"
-              :append-inner-icon="newPassword ? 'mdi-eye' : undefined"
-              :type="newPasswordType"
-              clearable
-              label="Новый пароль"
-              persistent-clear
-              @click:append-inner="
+            v-model="newPassword"
+            :disabled="isLoading"
+            :append-inner-icon="newPassword ? 'mdi-eye' : undefined"
+            :type="newPasswordType"
+            clearable
+            label="Новый пароль"
+            persistent-clear
+            @click:append-inner="
               newPasswordType = newPasswordType === 'password' ? 'text' : 'password'
             "
           />
           <v-text-field
-              v-model="passwordConfirmation"
-              :disabled="isLoading"
-              :append-inner-icon="passwordConfirmation ? 'mdi-eye' : undefined"
-              :type="passwordConfirmationType"
-              clearable
-              label="Проверка пароля"
-              persistent-clear
-              @click:append-inner="
+            v-model="passwordConfirmation"
+            :disabled="isLoading"
+            :append-inner-icon="passwordConfirmation ? 'mdi-eye' : undefined"
+            :type="passwordConfirmationType"
+            clearable
+            label="Проверка пароля"
+            persistent-clear
+            @click:append-inner="
               passwordConfirmationType =
                 passwordConfirmationType === 'password' ? 'text' : 'password'
             "
           />
           <v-btn
-              :disabled="isSetPasswordButtonDisabled"
-              class="button"
-              rounded
-              text="Изменить"
-              type="submit"
+            :disabled="isSetPasswordButtonDisabled"
+            class="button"
+            rounded
+            text="Изменить"
+            type="submit"
           />
         </form>
       </div>
@@ -480,20 +486,20 @@ onMounted(async () => {
           <FieldSet title="Созданный отчет будет содержать:">
             <v-checkbox v-model="exportIncludesNorms" label="Лист с таблицей нормативов" />
             <v-checkbox
-                v-model="exportIncludesResults"
-                label="Сводный лист с итоговыми результатами"
+              v-model="exportIncludesResults"
+              label="Сводный лист с итоговыми результатами"
             />
             <v-checkbox
-                v-model="exportIncludesStandards"
-                label="Отдельные листы для каждого норматива"
+              v-model="exportIncludesStandards"
+              label="Отдельные листы для каждого норматива"
             />
           </FieldSet>
           <v-btn
-              :disabled="isSetExportButtonDisabled"
-              color="primary"
-              class="button"
-              rounded
-              @click="exportData('xlsx')"
+            :disabled="isSetExportButtonDisabled"
+            color="primary"
+            class="button"
+            rounded
+            @click="exportData('xlsx')"
           >
             <v-icon left>mdi-download</v-icon>
             Скачать отчет

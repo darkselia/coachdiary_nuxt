@@ -2,7 +2,7 @@
 definePageMeta({
   name: 'privacy-policy',
   mobileTitle: 'Политика конфиденциальности',
-})
+});
 
 const email = 'или в сообщения группы ВКонтакте';
 const companyName = 'Дневником Тренера';

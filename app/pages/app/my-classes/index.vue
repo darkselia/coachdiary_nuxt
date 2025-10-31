@@ -1,7 +1,9 @@
 <script setup lang="ts">
-definePageMeta({name: 'my-classes', mobileTitle: 'Мои классы'});
+import type { ClassRequest, StudentResponse } from '@/types/types';
+definePageMeta({ name: 'my-classes', mobileTitle: 'Мои классы' });
 
 const { smAndUp } = useDisplay();
+const router = useRouter();
 const myClassesStore = useMyClassesStore();
 const activeLevelNumber = ref(-1);
 const studentsData = ref<StudentResponse[]>([]);
@@ -18,8 +20,8 @@ const groupedStudentsClasses = computed(() => {
     if (a.student_class.class_name !== b.student_class.class_name) {
       return a.student_class.class_name.localeCompare(b.student_class.class_name);
     }
-    let fullNameA = `${a.last_name} ${a.first_name} ${a.patronymic}`;
-    let fullNameB = `${b.last_name} ${b.first_name} ${b.patronymic}`;
+    const fullNameA = `${a.last_name} ${a.first_name} ${a.patronymic}`;
+    const fullNameB = `${b.last_name} ${b.first_name} ${b.patronymic}`;
     return fullNameA.localeCompare(fullNameB);
   });
   const result: Record<number, Record<string, StudentResponse[]>> = {};
@@ -27,16 +29,16 @@ const groupedStudentsClasses = computed(() => {
     if (!result[student.student_class.number]) {
       result[student.student_class.number] = {};
     }
-    if (!result[student.student_class.number][student.student_class.class_name]) {
-      result[student.student_class.number][student.student_class.class_name] = [];
+    if (!result?.[student.student_class.number]?.[student.student_class.class_name]) {
+      (result[student.student_class.number]!)[student.student_class.class_name] = [];
     }
-    result[student.student_class.number][student.student_class.class_name].push(student);
+    result?.[student.student_class.number]?.[student.student_class.class_name]?.push(student);
   }
 
   return result;
 });
 
-function updateStudentsData(data: StudentResponse[], classNumber: number, letter: string) {
+function updateStudentsData(data: StudentResponse[], classNumber: number) {
   studentsData.value = data;
   activeLevelNumber.value = classNumber;
   myClassesStore.search = '';
@@ -58,37 +60,36 @@ async function search(searchValue: string) {
     return;
   }
 
-  timer = setTimeout(async () => {
+  timer = setTimeout(async() => {
     try {
       activeLevelNumber.value = -1;
       myClassesStore.search = searchValue;
       await myClassesStore.setQuery('search');
-      let response = await get(`/api/students/`, { full_name: searchValue });
+      const response = await get('/api/students/', { full_name: searchValue });
       if (response.ok) {
         studentsData.value = (await response.json()) as StudentResponse[];
         setTimeout(() => {
-          myClassesStore.activeClasses = Object.entries(groupedStudentsClasses.value).flatMap(
-              ([levelNumber, classes]) =>
-                  Object.keys(classes).map((className) => levelNumber + className),
-          );
+          myClassesStore.activeClasses = Object
+            .entries(groupedStudentsClasses.value)
+            .flatMap(([ levelNumber, classes ]) => Object
+              .keys(classes)
+              .map(className => levelNumber + className));
         }, 0);
       } else {
         toast.error(getErrorMessage(await response.json()));
       }
-    } catch (e) {
+    } catch {
       toast.error('Произошла ошибка во время получения данных, попробуйте еще раз');
     }
   }, 400);
 }
 
 async function getPDFQRCodes(number: number, name: string) {
-  const id = classesData.value.find(
-      (item) => item.number === number && item.class_name === name,
-  )?.id;
+  const id = classesData.value.find(item => item.number === number && item.class_name === name)?.id;
   try {
     isLoading.value = true;
     loadingText.value = 'генерация QR-кодов';
-    const response = await get(`/api/students/generate_qr_codes_pdf/`, {
+    const response = await get('/api/students/generate_qr_codes_pdf/', {
       class_id: id,
     });
     if (response.ok) {
@@ -114,9 +115,7 @@ async function deleteClass(number: number, name: string) {
     text: 'Вы уверены, что хотите удалить весь класс?',
   });
 
-  const id = classesData.value.find(
-      (item) => item.number === number && item.class_name === name,
-  )?.id;
+  const id = classesData.value.find(item => item.number === number && item.class_name === name)?.id;
 
   try {
     const response = await del(`/api/classes/${id}/`);
@@ -134,7 +133,8 @@ async function deleteClass(number: number, name: string) {
 async function transferToNextYear() {
   await showConfirmDialog({
     title: 'Перевод на следующий год',
-    text: 'Это действие переведет все классы на следующий год (сохраняя букву) и удаляет выпущенные 11 классы. Вы уверены, что хотите сделать перевод?',
+    text: 'Это действие переведет все классы на следующий год (сохраняя букву) и удаляет выпущенные 11 классы. ' +
+        'Вы уверены, что хотите сделать перевод?',
   });
 
   try {
@@ -154,7 +154,7 @@ async function transferToNextYear() {
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   if (myClassesStore.search) {
     await search(myClassesStore.search);
   }
@@ -164,71 +164,71 @@ onMounted(async () => {
 <template>
   <TopPanel class="top-panel">
     <BottomSheetWithButton
-        v-if="!smAndUp"
-        button-text="Классы"
-        sheet-title="Классы"
-        eager
-        button-color="rgb(var(--v-theme-secondary))"
+      v-if="!smAndUp"
+      button-text="Классы"
+      sheet-title="Классы"
+      eager
+      button-color="rgb(var(--v-theme-secondary))"
     >
       <template #default="{ toggle }">
         <ClassesPanel
-            v-model="activeLevelNumber"
-            @studentsData="updateStudentsData"
-            @buttonClick="
+          v-model="activeLevelNumber"
+          @students-data="updateStudentsData"
+          @button-click="
             toggle();
             myClassesStore.activeClasses = [];
           "
         />
         <v-btn
-            size="small"
-            color="secondary"
-            variant="outlined"
-            text="Перевести на следующий год"
-            class="transfer-button"
-            @click="transferToNextYear"
-        />
-      </template>
-    </BottomSheetWithButton>
-    <v-combobox
-        v-model="myClassesStore.search"
-        :items="studentsData.map((v) => v.full_name)"
-        density="compact"
-        class="search"
-        placeholder="Введите имя ученика"
-        prepend-inner-icon="mdi-magnify"
-        variant="solo"
-        menu-icon=""
-        clearable
-        rounded
-        hide-details
-        @update:search="search"
-    />
-    <template #left v-if="smAndUp">
-      <v-btn
           size="small"
           color="secondary"
           variant="outlined"
           text="Перевести на следующий год"
+          class="transfer-button"
           @click="transferToNextYear"
+        />
+      </template>
+    </BottomSheetWithButton>
+    <v-combobox
+      v-model="myClassesStore.search"
+      :items="studentsData.map((v) => v.full_name)"
+      density="compact"
+      class="search"
+      placeholder="Введите имя ученика"
+      prepend-inner-icon="mdi-magnify"
+      variant="solo"
+      menu-icon=""
+      clearable
+      rounded
+      hide-details
+      @update:search="search"
+    />
+    <template #left v-if="smAndUp">
+      <v-btn
+        size="small"
+        color="secondary"
+        variant="outlined"
+        text="Перевести на следующий год"
+        @click="transferToNextYear"
       />
     </template>
     <template #right v-if="smAndUp">
       <v-btn
-          :to="{ name: 'create-student' }"
-          color="secondary"
-          icon="mdi-plus"
-          variant="outlined"
+        :to="{ name: 'create-student' }"
+        color="secondary"
+        icon="mdi-plus"
+        variant="outlined"
       />
     </template>
   </TopPanel>
 
-  <div class="classes-panel" v-if="smAndUp">
+  <div v-if="smAndUp" class="classes-panel">
     <ClassesPanel
-        v-model="activeLevelNumber"
-        direction-column
-        @studentsData="updateStudentsData"
-        @classesData="getClassesData"
-        @buttonClick="myClassesStore.activeClasses = []"
+      v-model="activeLevelNumber"
+      direction-column
+      @students-data="updateStudentsData"
+      @classes-data="getClassesData"
+      @button-click="myClassesStore.activeClasses = []"
     />
   </div>
 
@@ -237,9 +237,9 @@ onMounted(async () => {
       <template v-for="(levelClasses, levelNumber) in groupedStudentsClasses" :key="levelNumber">
         <v-expansion-panels v-model="myClassesStore.activeClasses" multiple>
           <v-expansion-panel
-              v-for="(students, className) in levelClasses"
-              :key="levelNumber + className"
-              :value="levelNumber + className"
+            v-for="(students, className) in levelClasses"
+            :key="levelNumber + className"
+            :value="levelNumber + className"
           >
             <v-expansion-panel-title>
               <strong>{{ levelNumber + className }}</strong>
@@ -253,24 +253,24 @@ onMounted(async () => {
                 <div v-else>Код</div>
               </div>
 
-              <div class="students-list" v-for="i in students.length" :key="students[i - 1].id">
-                <MyClassesStudent :i="i" :student="students[i - 1]" />
+              <div v-for="i in students.length" :key="students[i - 1]!.id" class="students-list">
+                <MyClassesStudent :i="i" :student="students[i - 1]!" />
               </div>
 
               <div class="action-buttons">
                 <v-btn
-                    size="small"
-                    color="info"
-                    variant="outlined"
-                    text="Скачать qr коды приглашений"
-                    @click="getPDFQRCodes(+levelNumber, className)"
+                  size="small"
+                  color="info"
+                  variant="outlined"
+                  text="Скачать qr коды приглашений"
+                  @click="getPDFQRCodes(+levelNumber, className)"
                 />
                 <v-btn
-                    size="small"
-                    color="error"
-                    variant="outlined"
-                    text="Удалить"
-                    @click="deleteClass(+levelNumber, className)"
+                  size="small"
+                  color="error"
+                  variant="outlined"
+                  text="Удалить"
+                  @click="deleteClass(+levelNumber, className)"
                 />
                 <!--    <v-btn size="small" color="warning" variant="outlined">Архивировать</v-btn>
                         <v-btn size="small" color="info" variant="outlined">Перевести на след. год</v-btn>-->

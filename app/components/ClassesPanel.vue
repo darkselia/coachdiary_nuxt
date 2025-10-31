@@ -24,23 +24,20 @@ const activeLevelNumber = defineModel<number>({
 
 const className = ref((route.query.letter as string) || '');
 
-const fullClassName = computed(() =>
-  className.value ? activeLevelNumber.value + className.value : activeLevelNumber.value,
-);
+const fullClassName = computed(() => className.value
+  ? activeLevelNumber.value + className.value
+  : activeLevelNumber.value);
 
-const classes = computed(() =>
-  classesData.value.reduce(
-    (acc, v) => {
-      if (!(v.number in acc)) {
-        acc[v.number] = [] as string[];
-      }
-
-      acc[v.number].push(v.class_name);
-      return acc;
-    },
-    {} as Record<number, string[]>,
-  ),
-);
+const classes = computed(() => classesData.value.reduce(
+  (acc, v) => {
+    if (!(v.number in acc)) {
+      acc[v.number] = [] as string[];
+    }
+    acc[v.number]!.push(v.class_name);
+    return acc;
+  },
+  {} as Record<number, string[]>,
+));
 
 async function getStudentsData(classNumber: number, letter: string, emitButtonClick = false) {
   activeLevelNumber.value = classNumber;
@@ -70,9 +67,9 @@ async function getStudentsData(classNumber: number, letter: string, emitButtonCl
   try {
     let response;
     if (classNumber == 12) {
-      response = await get(`/api/students/`);
+      response = await get('/api/students/');
     } else {
-      response = await get(`/api/students/`, {
+      response = await get('/api/students/', {
         student_class: fullClassName.value,
       });
     }
@@ -87,11 +84,11 @@ async function getStudentsData(classNumber: number, letter: string, emitButtonCl
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   if (route.query.classNumber) {
     activeLevelNumber.value = +route.query.classNumber;
   }
-  classesData.value = await get('/api/classes/').then((res) => res.json());
+  classesData.value = await get('/api/classes/').then(res => res.json());
 
   emit('classesData', classesData.value);
   if (activeLevelNumber.value !== -1) {
@@ -114,9 +111,9 @@ onMounted(async () => {
       {{ n }}{{ activeLevelNumber === n ? className : '' }}
       <v-menu
         v-if="menu"
-        activator="parent"
         :location="directionColumn ? 'right center' : 'bottom center'"
         :transition="directionColumn ? 'slide-x-transition' : 'slide-y-transition'"
+        activator="parent"
         offset="5"
       >
         <div :class="directionColumn ? 'horizontal-menu' : ''" class="menu">

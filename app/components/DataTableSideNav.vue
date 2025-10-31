@@ -37,9 +37,9 @@ function isActive(itemId: number): boolean {
 function handleItemClick(itemId: number): void {
   if (multipleSelect && Array.isArray(selectedIds.value)) {
     if (selectedIds.value.includes(itemId)) {
-      selectedIds.value = selectedIds.value.filter((id) => id !== itemId);
+      selectedIds.value = selectedIds.value.filter(id => id !== itemId);
     } else {
-      selectedIds.value = [...selectedIds.value, itemId];
+      selectedIds.value = [ ...selectedIds.value, itemId ];
     }
   } else {
     selectedId.value = itemId;

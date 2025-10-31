@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { StudentStandard } from '@/types/types';
 
-type StudentStandardValue = { standard_id: number; level_number: number; value: number | null };
+type StudentStandardValue =
+  {
+    standard_id: number;
+    level_number: number;
+    value: number | null;
+  };
 
 const {
   standards,
@@ -55,14 +60,15 @@ function validateValueByStandardType(value: string | number | null) {
 function trackValueChange(standardId: number, value: number | null, levelNumber: number) {
   if (value === +'') value = null;
 
-  const existingIndex = changedValues.value.findIndex(
-    (item) => item.level_number === levelNumber && item.standard_id === standardId,
-  );
+  const existingIndex = changedValues.value.findIndex(item => item.level_number === levelNumber &&
+      item.standard_id === standardId);
 
   if (existingIndex !== -1) {
-    changedValues.value[existingIndex].value = value;
+    changedValues.value[existingIndex]!.value = value;
   } else {
-    changedValues.value.push({ level_number: levelNumber, standard_id: standardId, value });
+    changedValues.value.push({
+      level_number: levelNumber, standard_id: standardId, value,
+    });
   }
 }
 
@@ -77,7 +83,7 @@ function saveData() {
     :fixed-header="true"
     :headers="headers"
     :items="standards"
-    :itemsPerPageOptions="[10, 20, 30, { title: 'Все', value: -1 }]"
+    :items-per-page-options="[10, 20, 30, { title: 'Все', value: -1 }]"
     :mobile="false"
     :show-current-page="true"
     class="table"
@@ -88,9 +94,9 @@ function saveData() {
       <v-text-field
         v-if="item.standard.has_numeric_value"
         v-model="item.value"
-        type="number"
         :disabled="isLoading"
         :readonly="readonlyInput"
+        type="number"
         @update:model-value="trackValueChange(item.standard.id, item.value, item.level_number)"
       />
     </template>
@@ -105,13 +111,13 @@ function saveData() {
       <v-text-field
         v-else
         v-model="item.grade"
-        type="number"
-        class="mark"
-        max="5"
         :disabled="isLoading"
         :rules="[validateValueByStandardType]"
         :readonly="readonlyInput"
         :class="getMarkColor(item.grade ?? 0)"
+        type="number"
+        class="mark"
+        max="5"
         @update:model-value="trackValueChange(item.standard.id, item.grade, item.level_number)"
       />
     </template>
@@ -123,7 +129,11 @@ function saveData() {
       </tr>
     </template>
     <template #footer.prepend>
-      <v-btn v-if="!hideSaveButton" class="button" color="primary" @click="saveData">
+      <v-btn
+        v-if="!hideSaveButton"
+        class="button"
+        color="primary"
+        @click="saveData">
         Сохранить
       </v-btn>
       <div class="space" />

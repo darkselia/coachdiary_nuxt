@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ name: 'about-site', mobileTitle: 'О сайте' })
+definePageMeta({ name: 'about-site', mobileTitle: 'О сайте' });
 </script>
 
 <template>
@@ -30,7 +30,12 @@ definePageMeta({ name: 'about-site', mobileTitle: 'О сайте' })
       обучением!
     </p>
     <div class="text">
-      <v-btn :to="{ name: 'login' }" class="sigh-up-btn" rounded size="x-large" variant="flat">
+      <v-btn
+        :to="{ name: 'login' }"
+        class="sigh-up-btn"
+        rounded
+        size="x-large"
+        variant="flat">
         Зарегистрироваться
       </v-btn>
     </div>

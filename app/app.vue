@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useUserStore().fetchProfile();
 
-const {smAndUp} = useDisplay();
+const { smAndUp } = useDisplay();
 const route = useRoute();
 const isLoggedInView = computed(() => route.path.startsWith('/app'));
 </script>
@@ -9,12 +9,12 @@ const isLoggedInView = computed(() => route.path.startsWith('/app'));
 <template>
   <NuxtRouteAnnouncer/>
   <Toaster
-      rich-colors
-      expand
-      close-button
-      visible-toasts="3"
-      :position="smAndUp ? 'bottom-right' : 'top-center'"
-      :offset="'30px'"
+    :position="smAndUp ? 'bottom-right' : 'top-center'"
+    :offset="'30px'"
+    rich-colors
+    expand
+    close-button
+    visible-toasts="3"
   />
   <v-app>
     <AppBar/>

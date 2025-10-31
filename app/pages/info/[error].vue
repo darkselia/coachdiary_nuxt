@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({name: 'info', mobileTitle: 'Дневник Тренера'})
+definePageMeta({ name: 'info', mobileTitle: 'Дневник Тренера' });
 
 const route = useRoute();
 const title = ref('');
@@ -18,14 +18,14 @@ async function verifyEmail() {
     } else {
       error.value = getErrorMessage(await response.json());
     }
-  } catch (e) {
+  } catch(e) {
     error.value = getErrorMessage(e);
   } finally {
     loading.value = false;
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   if (route.params.token) {
     switch (route.name) {
       case 'verify-email':
@@ -57,7 +57,11 @@ onMounted(async () => {
         </div>
 
         <div v-else-if="success" class="status-block success">
-          <v-icon icon="mdi-check-circle" color="success" size="64" class="status-icon" />
+          <v-icon
+            icon="mdi-check-circle"
+            color="success"
+            size="64"
+            class="status-icon" />
           <div class="text">
             <p class="welcome">Поздравляем!</p>
             <p>Ваш email успешно подтвержден</p>
@@ -65,11 +69,11 @@ onMounted(async () => {
             <p class="brand">Добро пожаловать в "Дневник Тренера"!</p>
             <p class="small">Теперь вы можете использовать все возможности сервиса</p>
             <v-btn
-                color="primary"
-                variant="outlined"
-                class="mt-6"
-                :to="{ name: 'my-diary' }"
-                rounded
+              :to="{ name: 'my-diary' }"
+              color="primary"
+              variant="outlined"
+              class="mt-6"
+              rounded
             >
               Зайти в сервис
             </v-btn>
@@ -77,12 +81,21 @@ onMounted(async () => {
         </div>
 
         <div v-else class="status-block error">
-          <v-icon icon="mdi-alert-circle" color="error" size="64" class="status-icon" />
+          <v-icon
+            icon="mdi-alert-circle"
+            color="error"
+            size="64"
+            class="status-icon" />
           <div class="text">
             <p class="error-title">Что-то пошло не так</p>
             <p>{{ error }}</p>
             <p class="small">Возможно, ссылка устарела или была использована ранее</p>
-            <v-btn color="primary" variant="outlined" class="mt-6" :to="{ name: 'home' }" rounded>
+            <v-btn
+              :to="{ name: 'home' }"
+              color="primary"
+              variant="outlined"
+              class="mt-6"
+              rounded>
               Вернуться на главную
             </v-btn>
           </div>

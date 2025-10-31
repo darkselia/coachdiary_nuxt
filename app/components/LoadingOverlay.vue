@@ -8,7 +8,11 @@ defineProps<{
 <template>
   <v-overlay :model-value="isLoading" persistent class="import-overlay">
     <div class="import-overlay-content rounded-lg">
-      <v-progress-circular indeterminate size="64" color="primary" width="10" />
+      <v-progress-circular
+        indeterminate
+        size="64"
+        color="primary"
+        width="10" />
       <div class="import-overlay-text">
         Выполняется {{ task || 'операция' }}...
         <br />

@@ -15,9 +15,9 @@ defineEmits<{
   <div class="side-nav-buttons">
     <v-btn
       :active="pageType === types.first"
+      :text="labels.first"
       class="side-nav-button"
       size="small"
-      :text="labels.first"
       variant="outlined"
       @click="
         pageType = types.first;
@@ -26,9 +26,9 @@ defineEmits<{
     />
     <v-btn
       :active="pageType === types.second"
+      :text="labels.second"
       class="side-nav-button"
       size="small"
-      :text="labels.second"
       variant="outlined"
       @click="
         pageType = types.second;

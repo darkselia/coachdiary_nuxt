@@ -47,12 +47,8 @@ export default withNuxt({
       {
         before: true,
         after: true,
-        overrides: {
-          if: { after: false }, for: { after: false }, while: { after: false },
-        },
       },
     ],
-    '@stylistic/line-comment-position': [ 'warn', { position: 'above' } ],
     '@stylistic/linebreak-style': [ 'warn', 'unix' ],
     '@stylistic/lines-around-comment': [
       'warn',
@@ -68,7 +64,7 @@ export default withNuxt({
       'always',
       { exceptAfterSingleLine: true },
     ],
-    '@stylistic/max-len': [ 'warn', { code: 120 } ],
+    '@stylistic/max-len': [ 'warn', { code: 140 } ],
     '@stylistic/max-statements-per-line': [ 'warn', { max: 1 } ],
     '@stylistic/member-delimiter-style': [
       'warn',
@@ -84,7 +80,7 @@ export default withNuxt({
       },
     ],
     '@stylistic/multiline-comment-style': [ 'warn', 'starred-block' ],
-    '@stylistic/multiline-ternary': [ 'warn', 'never' ],
+    '@stylistic/multiline-ternary': [ 'warn', 'always-multiline' ],
     '@stylistic/new-parens': [ 'warn', 'always' ],
     '@stylistic/newline-per-chained-call': [ 'warn', { ignoreChainWithDepth: 2 } ],
     '@stylistic/no-confusing-arrow': [ 'warn', { allowParens: true, onlyOneSimpleParam: true } ],
@@ -111,7 +107,7 @@ export default withNuxt({
     '@stylistic/no-trailing-spaces': ['warn'],
     '@stylistic/no-whitespace-before-property': ['warn'],
     '@stylistic/nonblock-statement-body-position': ['off'],
-    '@stylistic/object-curly-newline': [ 'warn', { consistent: true, minProperties: 3 } ],
+    '@stylistic/object-curly-newline': ['off'],
     '@stylistic/object-curly-spacing': [ 'warn', 'always' ],
     '@stylistic/object-property-newline': [ 'warn', { allowAllPropertiesOnSameLine: true } ],
     '@stylistic/one-var-declaration-per-line': [ 'warn', 'initializations' ],
@@ -147,12 +143,24 @@ export default withNuxt({
     '@stylistic/wrap-regex': ['off'],
 
     // vue
+    'vue/require-default-prop': 'off',
+    'vue/valid-v-slot': 'off',
     'vue/no-multiple-template-root': 'off',
     'vue/max-attributes-per-line': [
       'warn',
       {
-        singleline: { max: 3 },
+        singleline: { max: 4 },
         multiline: { max: 1 },
+      },
+    ],
+    'vue/html-indent': [
+      'error',
+      2, // или 4 для 4 пробелов
+      {
+        attribute: 1,
+        baseIndent: 1,
+        closeBracket: 0,
+        alignAttributesVertically: true,
       },
     ],
     'vue/attributes-order': [

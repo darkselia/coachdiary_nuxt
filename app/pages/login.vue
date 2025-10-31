@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-definePageMeta({name: 'login', mobileTitle: 'Дневник Тренера'})
+definePageMeta({ name: 'login', mobileTitle: 'Дневник Тренера' });
 
 const pageType = ref<'signIn' | 'signUp' | 'restore' | 'tokenSignUp' | 'reset-password'>('signIn');
 const router = useRouter();
@@ -26,9 +26,9 @@ const resetPasswordToken = ref('');
 const isSendButtonDisabled = computed(() => {
   if (pageType.value === 'reset-password') {
     return (
-        !password.value?.length ||
-        !passwordConfirmation.value?.length ||
-        password.value !== passwordConfirmation.value
+      !password.value?.length ||
+      !passwordConfirmation.value?.length ||
+      password.value !== passwordConfirmation.value
     );
   }
   if (pageType.value === 'tokenSignUp') {
@@ -42,12 +42,12 @@ const isSendButtonDisabled = computed(() => {
   }
   if (pageType.value === 'signUp') {
     return (
-        !password.value?.length ||
-        !firstName.value?.length ||
-        !lastName.value?.length ||
-        !passwordConfirmation.value?.length ||
-        password.value !== passwordConfirmation.value ||
-        !privacyPolicy.value
+      !password.value?.length ||
+      !firstName.value?.length ||
+      !lastName.value?.length ||
+      !passwordConfirmation.value?.length ||
+      password.value !== passwordConfirmation.value ||
+      !privacyPolicy.value
     );
   }
   if (pageType.value === 'restore') {
@@ -106,7 +106,7 @@ async function sendData() {
     if (response?.status === 'error' || response?.status === 'ошибка') {
       toast.error(getErrorMessage(response));
     }
-  } catch (e) {
+  } catch {
     toast.error('Произошла ошибка во время отправки данных, попробуйте еще раз');
   } finally {
     isLoading.value = false;
@@ -137,7 +137,7 @@ async function signUp() {
   };
 
   if (invitationToken.value) {
-    url = `/api/create-user/from-invitation/`;
+    url = '/api/create-user/from-invitation/';
     requestData.invite_code = invitationToken.value;
   }
 
@@ -209,7 +209,7 @@ async function resetPassword() {
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   if (route.params.token) {
     switch (route.name) {
       case 'reset-password':
@@ -233,78 +233,78 @@ onMounted(async () => {
       <div class="text">{{ title }}</div>
       <form class="border-container" @submit.prevent="sendData">
         <v-text-field
-            v-if="pageType === 'signUp'"
-            v-model="lastName"
-            :disabled="isLoading || !!invitationToken"
-            clearable
-            label="Фамилия"
-            persistent-clear
-            variant="outlined"
+          v-if="pageType === 'signUp'"
+          v-model="lastName"
+          :disabled="isLoading || !!invitationToken"
+          clearable
+          label="Фамилия"
+          persistent-clear
+          variant="outlined"
         />
         <v-text-field
-            v-if="pageType === 'signUp'"
-            v-model="firstName"
-            :disabled="isLoading || !!invitationToken"
-            clearable
-            label="Имя"
-            persistent-clear
-            variant="outlined"
+          v-if="pageType === 'signUp'"
+          v-model="firstName"
+          :disabled="isLoading || !!invitationToken"
+          clearable
+          label="Имя"
+          persistent-clear
+          variant="outlined"
         />
         <v-text-field
-            v-if="pageType === 'signUp'"
-            v-model="patronymic"
-            :disabled="isLoading || !!invitationToken"
-            clearable
-            label="Отчество"
-            persistent-clear
-            variant="outlined"
+          v-if="pageType === 'signUp'"
+          v-model="patronymic"
+          :disabled="isLoading || !!invitationToken"
+          clearable
+          label="Отчество"
+          persistent-clear
+          variant="outlined"
         />
         <v-text-field
-            v-if="pageType !== 'tokenSignUp' && pageType !== 'reset-password'"
-            v-model="email"
-            :disabled="isLoading"
-            clearable
-            label="Почта"
-            persistent-clear
-            placeholder="example@example.com"
-            variant="outlined"
+          v-if="pageType !== 'tokenSignUp' && pageType !== 'reset-password'"
+          v-model="email"
+          :disabled="isLoading"
+          clearable
+          label="Почта"
+          persistent-clear
+          placeholder="example@example.com"
+          variant="outlined"
         />
         <v-text-field
-            v-if="pageType !== 'restore' && pageType !== 'tokenSignUp'"
-            v-model="password"
-            :append-inner-icon="password ? 'mdi-eye' : undefined"
-            :disabled="isLoading"
-            :type="passwordType"
-            clearable
-            label="Пароль"
-            persistent-clear
-            variant="outlined"
-            @click:append-inner="passwordType = passwordType === 'password' ? 'text' : 'password'"
+          v-if="pageType !== 'restore' && pageType !== 'tokenSignUp'"
+          v-model="password"
+          :append-inner-icon="password ? 'mdi-eye' : undefined"
+          :disabled="isLoading"
+          :type="passwordType"
+          clearable
+          label="Пароль"
+          persistent-clear
+          variant="outlined"
+          @click:append-inner="passwordType = passwordType === 'password' ? 'text' : 'password'"
         />
         <v-text-field
-            v-if="pageType === 'signUp' || pageType === 'reset-password'"
-            v-model="passwordConfirmation"
-            :append-inner-icon="passwordConfirmation ? 'mdi-eye' : undefined"
-            :disabled="isLoading"
-            :type="passwordConfirmationType"
-            clearable
-            label="Повторите пароль"
-            persistent-clear
-            persistent-crear
-            variant="outlined"
-            @click:append-inner="
+          v-if="pageType === 'signUp' || pageType === 'reset-password'"
+          v-model="passwordConfirmation"
+          :append-inner-icon="passwordConfirmation ? 'mdi-eye' : undefined"
+          :disabled="isLoading"
+          :type="passwordConfirmationType"
+          clearable
+          label="Повторите пароль"
+          persistent-clear
+          persistent-crear
+          variant="outlined"
+          @click:append-inner="
             passwordConfirmationType = passwordConfirmationType === 'password' ? 'text' : 'password'
           "
         />
 
         <v-text-field
-            v-if="pageType === 'tokenSignUp'"
-            v-model="invitationToken"
-            :disabled="isLoading"
-            clearable
-            label="Код приглашения"
-            persistent-clear
-            variant="outlined"
+          v-if="pageType === 'tokenSignUp'"
+          v-model="invitationToken"
+          :disabled="isLoading"
+          clearable
+          label="Код приглашения"
+          persistent-clear
+          variant="outlined"
         />
 
         <v-checkbox v-if="pageType === 'signUp'" v-model="privacyPolicy" :disabled="isLoading">
@@ -319,43 +319,43 @@ onMounted(async () => {
         </v-checkbox>
 
         <v-btn
-            :disabled="isSendButtonDisabled || isLoading"
-            :text="buttonText"
-            class="button"
-            rounded
-            type="submit"
+          :disabled="isSendButtonDisabled || isLoading"
+          :text="buttonText"
+          class="button"
+          rounded
+          type="submit"
         />
       </form>
       <div v-if="pageType === 'signIn'">
         <v-btn
-            :disabled="isLoading"
-            size="small"
-            text="Регистрация"
-            variant="text"
-            @click="pageType = 'signUp'"
+          :disabled="isLoading"
+          size="small"
+          text="Регистрация"
+          variant="text"
+          @click="pageType = 'signUp'"
         />
         <v-btn
-            :disabled="isLoading"
-            size="small"
-            text="Восстановление пароля"
-            variant="text"
-            @click="pageType = 'restore'"
+          :disabled="isLoading"
+          size="small"
+          text="Восстановление пароля"
+          variant="text"
+          @click="pageType = 'restore'"
         />
         <v-btn
-            :disabled="isLoading"
-            size="small"
-            text="Использовать код приглашения"
-            variant="text"
-            @click="pageType = 'tokenSignUp'"
+          :disabled="isLoading"
+          size="small"
+          text="Использовать код приглашения"
+          variant="text"
+          @click="pageType = 'tokenSignUp'"
         />
       </div>
       <v-btn
-          v-else
-          :disabled="isLoading"
-          size="small"
-          text="Вернуться на страницу входа"
-          variant="text"
-          @click="
+        v-else
+        :disabled="isLoading"
+        size="small"
+        text="Вернуться на страницу входа"
+        variant="text"
+        @click="
           pageType = 'signIn';
           invitationToken = '';
         "

@@ -1,3 +1,4 @@
+<!--suppress VueUnrecognizedSlot -->
 <script lang="ts" setup>
 import type { VDataTable } from 'vuetify/components';
 import type { StudentsValueResponse, StudentValueRequest } from '@/types/types';
@@ -61,14 +62,12 @@ const sortedData = computed(() => {
   });
 });
 
-function results(
-  standardsDetails: {
-    grade: number | null;
-    value: number | null;
-    standard_id: number;
-  }[],
-): string {
-  return standardsDetails.map((value) => value.value).join(', ');
+function results(standardsDetails: {
+  grade: number | null;
+  value: number | null;
+  standard_id: number;
+}[]): string {
+  return standardsDetails.map(value => value.value).join(', ');
 }
 
 function getMarkColor(mark: number): string {
@@ -111,14 +110,15 @@ function trackValueChange(studentId: number, standardId: number, value: number |
 
   if (value === +'') value = null;
 
-  const existingIndex = changedValues.value.findIndex(
-    (item) => item.student_id === studentId && item.standard_id === standardId,
-  );
+  const existingIndex = changedValues.value.findIndex(item => item.student_id === studentId &&
+      item.standard_id === standardId);
 
   if (existingIndex !== -1) {
-    changedValues.value[existingIndex].value = value;
+    changedValues.value[existingIndex]!.value = value;
   } else {
-    changedValues.value.push({ student_id: studentId, standard_id: standardId, value });
+    changedValues.value.push({
+      student_id: studentId, standard_id: standardId, value,
+    });
   }
 }
 
@@ -133,15 +133,15 @@ function saveData() {
     :fixed-header="true"
     :headers="headers"
     :items="sortedData"
-    :itemsPerPageOptions="[10, 20, 30, 100, { title: 'Все', value: -1 }]"
+    :items-per-page-options="[10, 20, 30, 100, { title: 'Все', value: -1 }]"
     :mobile="false"
     :show-current-page="true"
     :sort-by="
       pageType === 'multiple'
         ? [
-            { key: 'average_grade', order: 'desc' },
-            { key: 'average_value', order: 'desc' },
-          ]
+          { key: 'average_grade', order: 'desc' },
+          { key: 'average_value', order: 'desc' },
+        ]
         : []
     "
     multi-sort
@@ -192,13 +192,13 @@ function saveData() {
       <v-text-field
         v-if="pageType === 'single'"
         v-model="item.average_value"
-        type="number"
         :disabled="isLoading"
         :max="standardType === 'technical' ? 5 : undefined"
         :rules="[validateValueByStandardType]"
         :class="standardType === 'technical' ? getMarkColor(item.average_grade ?? 0) + ' mark' : ''"
+        type="number"
         @update:model-value="
-          trackValueChange(item.id, item.standards_details[0].standard_id, item.average_value)
+          trackValueChange(item.id, item.standards_details[0]!.standard_id, item.average_value)
         "
       />
       <div v-else>{{ results(item.standards_details) }}</div>

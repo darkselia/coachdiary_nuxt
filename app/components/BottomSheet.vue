@@ -8,10 +8,14 @@ defineProps<{
 </script>
 
 <template>
-  <v-bottom-sheet v-model="isActive" inset :eager>
+  <v-bottom-sheet v-model="isActive" :eager inset>
     <div class="container">
       <div class="top-panel">
-        <v-btn color="white" icon="mdi-chevron-left" variant="text" @click="isActive = !isActive" />
+        <v-btn
+          color="white"
+          icon="mdi-chevron-left"
+          variant="text"
+          @click="isActive = !isActive" />
         <div>{{ sheetTitle }}</div>
       </div>
       <v-divider color="white" thickness="2" opacity="0.7" />

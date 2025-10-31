@@ -31,33 +31,37 @@ function clearFilters(): void {
 </script>
 
 <template>
-  <div class="filters-grid" :class="mobile ? 'filters-grid-mobile' : ''">
+  <div :class="{'filters-grid-mobile': mobile}" class="filters-grid">
     <div class="filters">
       <div>
         <div class="title">Пол</div>
-        <div class="filter-gender" :class="mobile ? 'flex-align-left' : ''">
+        <div :class="{'flex-align-left': mobile}" class="filter-gender">
           <v-btn
             :active="filterData.gender === 'f'"
             :ripple="false"
+            :text="mobile ? 'девочки' : 'Ж'"
             class="button"
             size="small"
-            :text="mobile ? 'девочки' : 'Ж'"
             variant="outlined"
             @click="selectGender('f')"
           />
           <v-btn
             :active="filterData.gender === 'm'"
             :ripple="false"
+            :text="mobile ? 'мальчики' : 'М'"
             class="button"
             size="small"
-            :text="mobile ? 'мальчики' : 'М'"
             variant="outlined"
             @click="selectGender('m')"
           />
         </div>
       </div>
 
-      <v-divider v-if="mobile" color="white" thickness="2" opacity="0.7" />
+      <v-divider
+        v-if="mobile"
+        color="white"
+        thickness="2"
+        opacity="0.7" />
 
       <div>
         <div class="title">Оценка</div>
@@ -70,15 +74,23 @@ function clearFilters(): void {
             :value="n + 1"
             density="compact"
           />
-          <v-checkbox v-model="filterData.grades" :value="null" density="compact" label="Нет" />
+          <v-checkbox
+            v-model="filterData.grades"
+            :value="null"
+            density="compact"
+            label="Нет" />
         </div>
       </div>
 
-      <v-divider v-if="mobile" color="white" thickness="2" opacity="0.7" />
+      <v-divider
+        v-if="mobile"
+        color="white"
+        thickness="2"
+        opacity="0.7" />
 
       <div>
-        <div class="title" :class="mobile ? '' : 'title-year'">Год рождения</div>
-        <div class="filter-year" :class="mobile ? 'filter-year-mobile' : ''">
+        <div :class="{'title-year': !mobile}" class="title">Год рождения</div>
+        <div :class="{'filter-year-mobile': mobile }" class="filter-year">
           <v-text-field
             v-model.number="filterData.birthYearFrom"
             :max="currentYear - 2"
@@ -98,10 +110,14 @@ function clearFilters(): void {
         </div>
       </div>
 
-      <v-divider v-if="mobile" color="white" thickness="2" opacity="0.7" />
+      <v-divider
+        v-if="mobile"
+        color="white"
+        thickness="2"
+        opacity="0.7" />
     </div>
 
-    <div class="action-buttons" :class="mobile ? 'action-buttons-mobile' : ''">
+    <div :class="{'action-buttons-mobile': mobile}" class="action-buttons">
       <v-btn
         class="button action-button"
         color="error"

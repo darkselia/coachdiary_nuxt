@@ -26,9 +26,9 @@ const fullName = computed(() => {
   return `${studentInfo.value.last_name} ${studentInfo.value.first_name} ${studentInfo.value.patronymic}`;
 });
 
-const levelButtonText = computed(() =>
-    selectedLevelNumber.value != -1 ? selectedLevelNumber.value + ' год обучения' : 'Года обучения',
-);
+const levelButtonText = computed(() => selectedLevelNumber.value != -1
+  ? selectedLevelNumber.value + ' год обучения'
+  : 'Года обучения');
 
 const labels = computed(() => {
   if (!studentInfo.value) return [];
@@ -48,9 +48,9 @@ const labels = computed(() => {
     {
       id: 3,
       label: `Код приглашения: ${
-          studentInfo.value.is_used_invitation
-              ? 'Использован'
-              : studentInfo.value.invitation_link.split('/').pop()
+        studentInfo.value.is_used_invitation
+          ? 'Использован'
+          : studentInfo.value.invitation_link.split('/').pop()
       }`,
     },
   ];
@@ -77,9 +77,7 @@ async function getStandardsByStudentId(studentId: number) {
     });
     if (response.ok) {
       standardsInfo.value = await response.json();
-      standards.value = standardsInfo.value.standards.sort((a, b) =>
-          a.standard.name.localeCompare(b.standard.name),
-      );
+      standards.value = standardsInfo.value.standards.sort((a, b) => a.standard.name.localeCompare(b.standard.name));
     } else {
       toast.error(getErrorMessage(await response.json()));
     }
@@ -111,12 +109,12 @@ async function deleteStudent() {
   }
 }
 
-async function saveStudentValue(
-    changedValues: { standard_id: number; level_number: number; value: number | null }[],
-) {
+async function saveStudentValue(changedValues: {
+  standard_id: number; level_number: number; value: number | null;
+}[]) {
   try {
     isLoading.value = true;
-    const request: StudentStandardRequest[] = changedValues.map((v) => ({
+    const request: StudentStandardRequest[] = changedValues.map(v => ({
       student_id: studentId.value,
       standard_id: v.standard_id,
       value: v.value,
@@ -137,7 +135,7 @@ async function saveStudentValue(
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   await getStudentById(studentId.value);
   await nextTick();
   selectedLevelNumber.value = studentInfo?.value?.student_class.number ?? 0;
@@ -158,12 +156,12 @@ onUnmounted(() => {
     <BottomSheetWithButton :button-text="levelButtonText" sheet-title="Года обучения" eager>
       <template #default="{ toggle }">
         <LevelPanel
-            v-model="selectedLevelNumber"
-            :class-number="studentInfo?.student_class.number ?? 0"
-            class="level-button-mobile"
-            mobile
-            color="secondary"
-            @update:model-value="
+          v-model="selectedLevelNumber"
+          :class-number="studentInfo?.student_class.number ?? 0"
+          class="level-button-mobile"
+          mobile
+          color="secondary"
+          @update:model-value="
             toggle();
             getStandardsByStudentId(studentId);
           "
@@ -174,12 +172,12 @@ onUnmounted(() => {
     <BottomSheetWithButton button-text="Информация" sheet-title="Информация" wrap-button>
       <template #default="{ toggle }">
         <DataTableSideNav
-            :data="labels"
-            is-content-static-text
-            page-type="student"
-            @delete="deleteStudent"
-            @edit="editStudent"
-            @update:model-value="toggle"
+          :data="labels"
+          is-content-static-text
+          page-type="student"
+          @delete="deleteStudent"
+          @edit="editStudent"
+          @update:model-value="toggle"
         />
       </template>
     </BottomSheetWithButton>
@@ -187,34 +185,34 @@ onUnmounted(() => {
 
   <div class="main">
     <LevelPanel
-        v-if="smAndUp"
-        v-model="selectedLevelNumber"
-        :class-number="studentInfo?.student_class.number ?? 0"
-        class="level-panel"
-        @update:model-value="getStandardsByStudentId(studentId)"
+      v-if="smAndUp"
+      v-model="selectedLevelNumber"
+      :class-number="studentInfo?.student_class.number ?? 0"
+      class="level-panel"
+      @update:model-value="getStandardsByStudentId(studentId)"
     />
 
     <div class="grid">
       <StudentTable
-          :standards="standards"
-          :summary-grade="standardsInfo.summary_grade"
-          :hide-save-button="!userStore.isTeacher"
-          :readonly-input="!userStore.isTeacher"
-          :is-loading
-          class="table"
-          @save-data="saveStudentValue"
+        :standards="standards"
+        :summary-grade="standardsInfo.summary_grade"
+        :hide-save-button="!userStore.isTeacher"
+        :readonly-input="!userStore.isTeacher"
+        :is-loading
+        class="table"
+        @save-data="saveStudentValue"
       />
 
       <DataTableSideNav
-          v-if="smAndUp"
-          :data="labels"
-          :has-action-buttons="userStore.isTeacher"
-          is-content-static-text
-          page-type="student"
-          title="Информация"
-          class="info-panel"
-          @delete="deleteStudent"
-          @edit="editStudent"
+        v-if="smAndUp"
+        :data="labels"
+        :has-action-buttons="userStore.isTeacher"
+        is-content-static-text
+        page-type="student"
+        title="Информация"
+        class="info-panel"
+        @delete="deleteStudent"
+        @edit="editStudent"
       />
     </div>
   </div>

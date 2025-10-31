@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type {StandardRequest, StandardResponse} from "~/types/types";
+import type { StandardRequest, StandardResponse } from '~/types/types';
 
-definePageMeta({name: 'create-standard', mobileTitle: 'Создание норматива'});
+definePageMeta({ name: 'create-standard', mobileTitle: 'Создание норматива' });
 
 const route = useRoute();
 const { mobile } = useDisplay();
@@ -29,30 +29,27 @@ interface LevelValues {
 }
 
 const isNextLevelButtonDisabled = computed(() => {
-  return !levelNumbers.value.some((value) => value > currentLevel.value);
+  return !levelNumbers.value.some(value => value > currentLevel.value);
 });
 
 const isPreviousLevelButtonDisabled = computed(() => {
-  return !levelNumbers.value.some((value) => value < currentLevel.value);
+  return !levelNumbers.value.some(value => value < currentLevel.value);
 });
 
 const isSaveButtonDisabled = computed(() => {
   return (
-      isLoading.value ||
-      !standardName.value ||
-      !standardType.value ||
-      levelNumbers.value.length === 0 ||
-      (Object.entries(levels.value).some(
-              ([key, value]) =>
-                  levelNumbers.value.includes(+key) &&
-                  (!value.girls.high ||
-                      !value.girls.middle ||
-                      !value.girls.low ||
-                      !value.boys.low ||
-                      !value.boys.middle ||
-                      !value.boys.high),
-          ) &&
-          standardType.value !== 'technical')
+    isLoading.value ||
+    !standardName.value ||
+    !standardType.value ||
+    levelNumbers.value.length === 0 ||
+    (Object.entries(levels.value).some(([ key, value ]) => levelNumbers.value.includes(+key) &&
+        (!value.girls.high ||
+            !value.girls.middle ||
+            !value.girls.low ||
+            !value.boys.low ||
+            !value.boys.middle ||
+            !value.boys.high)) &&
+            standardType.value !== 'technical')
   );
 });
 
@@ -98,32 +95,32 @@ async function createOrUpdateStandard() {
       name: standardName.value,
       has_numeric_value: standardType.value === 'physical',
       levels: Object.entries(levels.value)
-          .filter(([key]) => levelNumbers.value.includes(+key))
-          .map(([key, value]) => [
-            {
-              is_lower_better: evaluationType.value === 'lower-is-better',
-              level_number: +key,
-              low_value: value.girls.low,
-              middle_value: value.girls.middle,
-              high_value: value.girls.high,
-              gender: 'f' as const,
-            },
-            {
-              is_lower_better: evaluationType.value === 'lower-is-better',
-              level_number: +key,
-              low_value: value.boys.low,
-              middle_value: value.boys.middle,
-              high_value: value.boys.high,
-              gender: 'm' as const,
-            },
-          ])
-          .flat(),
+        .filter(([key]) => levelNumbers.value.includes(+key))
+        .map(([ key, value ]) => [
+          {
+            is_lower_better: evaluationType.value === 'lower-is-better',
+            level_number: +key,
+            low_value: value.girls.low,
+            middle_value: value.girls.middle,
+            high_value: value.girls.high,
+            gender: 'f' as const,
+          },
+          {
+            is_lower_better: evaluationType.value === 'lower-is-better',
+            level_number: +key,
+            low_value: value.boys.low,
+            middle_value: value.boys.middle,
+            high_value: value.boys.high,
+            gender: 'm' as const,
+          },
+        ])
+        .flat(),
     };
 
     const currentId = pageType.value === 'update-standard' ? `${route.params.id}/` : '';
     const currentMethod = pageType.value === 'update-standard' ? put : post;
 
-    const response = await currentMethod(`/api/standards/` + currentId, requestData);
+    const response = await currentMethod('/api/standards/' + currentId, requestData);
 
     if (response.ok && pageType.value === 'create-standard') {
       toast.success('Норматив успешно создан');
@@ -151,11 +148,9 @@ watch(levelNumbers, () => {
     currentLevel.value = Math.min(...levelNumbers.value);
 });
 
-onMounted(async () => {
+onMounted(async() => {
   if (pageType.value === 'update-standard') {
-    const data: StandardResponse = await get(`/api/standards/${route.params.id}/`).then((res) =>
-        res.json(),
-    );
+    const data: StandardResponse = await get(`/api/standards/${route.params.id}/`).then(res => res.json());
     standardName.value = data.name;
     standardType.value = data.has_numeric_value ? 'physical' : 'technical';
     evaluationType.value = data.levels[0]?.is_lower_better ? 'lower-is-better' : 'higher-is-better';
@@ -183,10 +178,10 @@ onMounted(async () => {
   <div v-auto-animate class="grid">
     <FieldSet title="Тип">
       <v-radio-group
-          v-model="standardType"
-          :disabled="pageType === 'update-standard' || isLoading"
-          row
-          @update:model-value="setLevelsWithZeroes"
+        v-model="standardType"
+        :disabled="pageType === 'update-standard' || isLoading"
+        row
+        @update:model-value="setLevelsWithZeroes"
       >
         <v-radio label="Физический" value="physical" />
         <v-radio label="Технический" value="technical" />
@@ -194,24 +189,24 @@ onMounted(async () => {
     </FieldSet>
 
     <v-text-field
-        v-model="standardName"
-        :class="
+      v-model="standardName"
+      :class="
         standardType === 'technical' || standardType === null ? 'standard-name-technical' : ''
       "
-        :disabled="isLoading"
-        class="standard-name"
-        label="Название"
+      :disabled="isLoading"
+      class="standard-name"
+      label="Название"
     />
 
     <FieldSet
-        v-if="standardType === 'physical'"
-        title="Параметр оценивания"
-        class="evaluation-type"
+      v-if="standardType === 'physical'"
+      title="Параметр оценивания"
+      class="evaluation-type"
     >
       <v-radio-group
-          v-model="evaluationType"
-          :disabled="pageType === 'update-standard' || isLoading"
-          row
+        v-model="evaluationType"
+        :disabled="pageType === 'update-standard' || isLoading"
+        row
       >
         <v-radio label="Больше-лучше" value="higher-is-better" />
         <v-radio label="Меньше-лучше" value="lower-is-better" />
@@ -227,13 +222,13 @@ onMounted(async () => {
 
       <div class="checkbox-group">
         <v-checkbox
-            v-for="n in 11"
-            v-model="levelNumbers"
-            :label="n.toString()"
-            :value="n"
-            :key="n"
-            :disabled="isLoading"
-            density="compact"
+          v-for="n in 11"
+          :key="n"
+          v-model="levelNumbers"
+          :label="n.toString()"
+          :value="n"
+          :disabled="isLoading"
+          density="compact"
         />
       </div>
     </FieldSet>
@@ -245,78 +240,78 @@ onMounted(async () => {
             <div class="standards">
               <div class="standards-table-title">Девочки</div>
               <v-text-field
-                  v-model.number="levels[currentLevel]!.girls.high"
-                  :disabled="isLoading"
-                  density="comfortable"
-                  label="Высокая ступень"
-                  min="0"
-                  type="number"
+                v-model.number="levels[currentLevel]!.girls.high"
+                :disabled="isLoading"
+                density="comfortable"
+                label="Высокая ступень"
+                min="0"
+                type="number"
               />
               <v-text-field
-                  v-model.number="levels[currentLevel]!.girls.middle"
-                  :disabled="isLoading"
-                  class="standard-input"
-                  density="comfortable"
-                  label="Средняя ступень"
-                  min="0"
-                  type="number"
+                v-model.number="levels[currentLevel]!.girls.middle"
+                :disabled="isLoading"
+                class="standard-input"
+                density="comfortable"
+                label="Средняя ступень"
+                min="0"
+                type="number"
               />
               <v-text-field
-                  v-model.number="levels[currentLevel]!.girls.low"
-                  :disabled="isLoading"
-                  class="standard-input"
-                  density="comfortable"
-                  label="Низкая ступень"
-                  min="0"
-                  type="number"
+                v-model.number="levels[currentLevel]!.girls.low"
+                :disabled="isLoading"
+                class="standard-input"
+                density="comfortable"
+                label="Низкая ступень"
+                min="0"
+                type="number"
               />
             </div>
             <div class="standards">
               <div class="standards-table-title">Мальчики</div>
               <v-text-field
-                  v-model.number="levels[currentLevel]!.boys.high"
-                  :disabled="isLoading"
-                  density="comfortable"
-                  label="Высокая ступень"
-                  min="0"
-                  type="number"
+                v-model.number="levels[currentLevel]!.boys.high"
+                :disabled="isLoading"
+                density="comfortable"
+                label="Высокая ступень"
+                min="0"
+                type="number"
               />
               <v-text-field
-                  v-model.number="levels[currentLevel]!.boys.middle"
-                  :disabled="isLoading"
-                  class="standard-input"
-                  density="comfortable"
-                  label="Средняя ступень"
-                  min="0"
-                  type="number"
+                v-model.number="levels[currentLevel]!.boys.middle"
+                :disabled="isLoading"
+                class="standard-input"
+                density="comfortable"
+                label="Средняя ступень"
+                min="0"
+                type="number"
               />
               <v-text-field
-                  v-model.number="levels[currentLevel]!.boys.low"
-                  :disabled="isLoading"
-                  class="standard-input"
-                  density="comfortable"
-                  label="Низкая ступень"
-                  min="0"
-                  type="number"
+                v-model.number="levels[currentLevel]!.boys.low"
+                :disabled="isLoading"
+                class="standard-input"
+                density="comfortable"
+                label="Низкая ступень"
+                min="0"
+                type="number"
               />
             </div>
           </div>
 
           <div class="pagination">
             <v-btn
-                :disabled="isPreviousLevelButtonDisabled || isLoading"
-                :text="mobile ? '' : 'Предыдущий уровень'"
-                prepend-icon="mdi-arrow-left"
-                variant="text"
-                @click="toPreviousLevel"
+              :disabled="isPreviousLevelButtonDisabled || isLoading"
+              :text="mobile ? '' : 'Предыдущий уровень'"
+              prepend-icon="mdi-arrow-left"
+              variant="text"
+              @click="toPreviousLevel"
             />
             <div>{{ currentLevel }} ур</div>
             <v-btn
-                :disabled="isNextLevelButtonDisabled || isLoading"
-                :text="mobile ? '' : 'Следующий уровень'"
-                append-icon="mdi-arrow-right"
-                variant="text"
-                @click="toNextLevel"
+              :disabled="isNextLevelButtonDisabled || isLoading"
+              :text="mobile ? '' : 'Следующий уровень'"
+              append-icon="mdi-arrow-right"
+              variant="text"
+              @click="toNextLevel"
             />
           </div>
         </template>
@@ -324,12 +319,12 @@ onMounted(async () => {
     </div>
 
     <v-btn
-        :disabled="isSaveButtonDisabled"
-        class="button"
-        color="primary"
-        rounded
-        text="Сохранить"
-        @click="createOrUpdateStandard"
+      :disabled="isSaveButtonDisabled"
+      class="button"
+      color="primary"
+      rounded
+      text="Сохранить"
+      @click="createOrUpdateStandard"
     />
   </div>
 </template>

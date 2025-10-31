@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import type {Gender, GenderNullable, StudentRequest, StudentResponse} from "~/types/types";
+import type {
+  Gender, GenderNullable, StudentRequest, StudentResponse,
+} from '~/types/types';
 
-definePageMeta({name: 'create-student', mobileTitle: 'Создание ученика'});
+definePageMeta({ name: 'create-student', mobileTitle: 'Создание ученика' });
 
 const route = useRoute();
 const router = useRouter();
@@ -12,19 +14,19 @@ const firstName = ref('');
 const lastName = ref('');
 const patronymic = ref('');
 const genderType = ref<GenderNullable>(null);
-const birthdayDate = ref(''); //2024-05-08
+const birthdayDate = ref(''); // 2024-05-08
 const classNumber = ref(-1);
 const className = ref('');
 
 const isSaveButtonDisabled = computed(() => {
   return (
-      isLoading.value ||
-      !firstName.value ||
-      !lastName.value ||
-      !genderType.value ||
-      !birthdayDate.value ||
-      classNumber.value === -1 ||
-      !className.value
+    isLoading.value ||
+    !firstName.value ||
+    !lastName.value ||
+    !genderType.value ||
+    !birthdayDate.value ||
+    classNumber.value === -1 ||
+    !className.value
   );
 });
 
@@ -45,7 +47,7 @@ async function createOrUpdateStudent() {
     const currentId = pageType.value === 'update-student' ? `${route.params.id}/` : '';
     const currentMethod = pageType.value === 'update-student' ? put : post;
 
-    const response = await currentMethod(`/api/students/` + currentId, requestData);
+    const response = await currentMethod('/api/students/' + currentId, requestData);
 
     if (response.ok && pageType.value === 'create-student') {
       toast.success('Ученик успешно создан');
@@ -60,18 +62,16 @@ async function createOrUpdateStudent() {
     } else {
       toast.error(getErrorMessage(await response.json()));
     }
-  } catch (e) {
+  } catch {
     toast.error('Произошла ошибка во время отправки данных, попробуйте еще раз');
   } finally {
     isLoading.value = false;
   }
 }
 
-onMounted(async () => {
+onMounted(async() => {
   if (pageType.value === 'update-student') {
-    const data: StudentResponse = await get(`/api/students/${route.params.id}/`).then((res) =>
-        res.json(),
-    );
+    const data: StudentResponse = await get(`/api/students/${route.params.id}/`).then(res => res.json());
     firstName.value = data.first_name;
     lastName.value = data.last_name;
     patronymic.value = data.patronymic;
@@ -89,13 +89,21 @@ onMounted(async () => {
   </TopPanel>
   <div class="container">
     <div class="names">
-      <v-text-field v-model="lastName" :disabled="isLoading" class="text-field" label="Фамилия" />
-      <v-text-field v-model="firstName" :disabled="isLoading" class="text-field" label="Имя" />
       <v-text-field
-          v-model="patronymic"
-          :disabled="isLoading"
-          class="text-field"
-          label="Отчество"
+        v-model="lastName"
+        :disabled="isLoading"
+        class="text-field"
+        label="Фамилия" />
+      <v-text-field
+        v-model="firstName"
+        :disabled="isLoading"
+        class="text-field"
+        label="Имя" />
+      <v-text-field
+        v-model="patronymic"
+        :disabled="isLoading"
+        class="text-field"
+        label="Отчество"
       />
     </div>
 
@@ -108,11 +116,11 @@ onMounted(async () => {
       </FieldSet>
 
       <v-text-field
-          v-model="birthdayDate"
-          :disabled="isLoading"
-          class="text-field"
-          label="Дата рождения"
-          type="date"
+        v-model="birthdayDate"
+        :disabled="isLoading"
+        class="text-field"
+        label="Дата рождения"
+        type="date"
       />
     </div>
 
@@ -120,30 +128,35 @@ onMounted(async () => {
       <div>
         <p class="levels-text">Уровень</p>
         <v-radio-group
-            v-model="classNumber"
-            :disabled="isLoading"
-            class="radio-group"
-            height="100px"
+          v-model="classNumber"
+          :disabled="isLoading"
+          class="radio-group"
+          height="100px"
         >
-          <v-radio v-for="n in 11" :key="n" :label="n.toString()" :value="n" density="compact" />
+          <v-radio
+            v-for="n in 11"
+            :key="n"
+            :label="n.toString()"
+            :value="n"
+            density="compact" />
         </v-radio-group>
       </div>
       <v-text-field
-          v-model="className"
-          :disabled="isLoading"
-          class="text-field class-name"
-          label="Буква"
-          @update:model-value="className = $event.toUpperCase()"
+        v-model="className"
+        :disabled="isLoading"
+        class="text-field class-name"
+        label="Буква"
+        @update:model-value="className = $event.toUpperCase()"
       />
     </FieldSet>
 
     <v-btn
-        :disabled="isSaveButtonDisabled"
-        class="button"
-        color="primary"
-        rounded
-        text="Сохранить"
-        @click="createOrUpdateStudent"
+      :disabled="isSaveButtonDisabled"
+      class="button"
+      color="primary"
+      rounded
+      text="Сохранить"
+      @click="createOrUpdateStudent"
     />
   </div>
 </template>

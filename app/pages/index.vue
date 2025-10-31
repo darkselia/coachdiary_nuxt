@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-definePageMeta({name: 'home', mobileTitle: 'Дневник Тренера'})
+definePageMeta({ name: 'home', mobileTitle: 'Дневник Тренера' });
 
 const { smAndDown } = useDisplay();
 </script>
@@ -12,7 +12,12 @@ const { smAndDown } = useDisplay();
             <img src="/mobile_logo_blue (2).png" alt="ss">-->
       <p class="main-text describe">Универсальное приложение для тренеров спортивных секций</p>
       <div class="text">
-        <v-btn :to="{ name: 'login' }" class="sigh-up-btn" rounded size="x-large" variant="flat">
+        <v-btn
+          :to="{ name: 'login' }"
+          class="sigh-up-btn"
+          rounded
+          size="x-large"
+          variant="flat">
           Зарегистрироваться
         </v-btn>
       </div>
@@ -22,7 +27,11 @@ const { smAndDown } = useDisplay();
   <section id="Capabilities" class="anchor-scroll">
     <h2 class="header">Возможности сервиса</h2>
 
-    <v-carousel v-if="smAndDown" :show-arrows="false" height="330" cycle>
+    <v-carousel
+      v-if="smAndDown"
+      :show-arrows="false"
+      height="330"
+      cycle>
       <v-carousel-item content-class="carousel-item">
         <CapabilitiesCard icon="mdi-arrow-up-thin-circle-outline" title="Вход и создание аккаунта">
           Пользователи могут создать собственный аккаунт “Дневника Тренера”. Это обеспечивает
@@ -32,8 +41,8 @@ const { smAndDown } = useDisplay();
       </v-carousel-item>
       <v-carousel-item content-class="carousel-item">
         <CapabilitiesCard
-            icon="mdi-filter-cog-outline"
-            title="Фильтрация для эффективного поиска в базе учеников"
+          icon="mdi-filter-cog-outline"
+          title="Фильтрация для эффективного поиска в базе учеников"
         >
           Наш сервис позволяет тренерам быстро находить нужную информацию о учениках, фильтруя
           данные по дисциплинам, классам или результатам. Такая функция облегчит планирование
@@ -49,8 +58,8 @@ const { smAndDown } = useDisplay();
       </v-carousel-item>
       <v-carousel-item content-class="carousel-item">
         <CapabilitiesCard
-            icon="mdi-information-slab-circle-outline"
-            title="Работа с информацией об учениках"
+          icon="mdi-information-slab-circle-outline"
+          title="Работа с информацией об учениках"
         >
           Функционал “Дневника Тренера” позволяет удобно управлять информацией об учениках, включая
           их личные данные, спортивный класс, достигнутые результаты и прогресс по нормативам.
@@ -65,8 +74,8 @@ const { smAndDown } = useDisplay();
         платформы.
       </CapabilitiesCard>
       <CapabilitiesCard
-          icon="mdi-filter-cog-outline"
-          title="Фильтрация для эффективного поиска в базе учеников"
+        icon="mdi-filter-cog-outline"
+        title="Фильтрация для эффективного поиска в базе учеников"
       >
         Наш сервис позволяет тренерам быстро находить нужную информацию о учениках, фильтруя данные
         по дисциплинам, классам или результатам. Такая функция облегчит планирование тренировок и
@@ -78,8 +87,8 @@ const { smAndDown } = useDisplay();
         любое время!
       </CapabilitiesCard>
       <CapabilitiesCard
-          icon="mdi-information-slab-circle-outline"
-          title="Работа с информацией об учениках"
+        icon="mdi-information-slab-circle-outline"
+        title="Работа с информацией об учениках"
       >
         Функционал “Дневника тренера” позволяет удобно управлять информацией об учениках, включая их
         личные данные, спортивный класс, достигнутые результаты и прогресс по нормативам.

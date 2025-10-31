@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import LoginView from '../login.vue'
+import LoginView from '../login.vue';
 
-definePageMeta({name: 'join', mobileTitle: 'Дневник Тренера'})
+definePageMeta({ name: 'join', mobileTitle: 'Дневник Тренера' });
 </script>
 <template>
   <LoginView/>

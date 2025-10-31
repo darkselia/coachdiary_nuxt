@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({name: 'about-us', mobileTitle: 'О нас'})
+definePageMeta({ name: 'about-us', mobileTitle: 'О нас' });
 </script>
 
 <template>
